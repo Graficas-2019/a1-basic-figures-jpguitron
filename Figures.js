@@ -173,24 +173,80 @@ function draw(gl, obj)
 // TO DO: Create functions needed to generate the vertex data for the different figures.
 function createSquare(gl) 
 {
-    var square = {};
+    var vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    var verts = [
+        .5,  .5,  0.0,
+        -.5,  .5,  0.0,
+        .5, -.5,  0.0,
+        -.5, -.5,  0.0
+    ];
+   
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+    var square = {buffer:vertexBuffer, vertSize:3, nVerts:4, primtype:gl.TRIANGLE_STRIP};// la primitiva que se usa, triangle_strip intenta crear imagen con triangulos, triangles solo deja hacer 1 triangulo
     return square;
 }
 
 function createTriangle(gl)
 {
-    var triangle = {};
+    var vertexBuffer; // arreglo donde se van a guardar los vertices
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);// se crea un arreglo
+    var verts = [
+        0.0,  0.5,  0.0,
+        -.5, -.5, 0.0,
+        .5, -.5,  0.0,
+        //-.5,  -.5,  0.0,
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+
+   
+    var triangle = {buffer:vertexBuffer, vertSize:3, nVerts:3, primtype:gl.TRIANGLE_STRIP};
     return triangle;
 }
 
 function createRhombus(gl)
 {
-    var rhombus = {};
+    var vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    var verts = [
+        0,  .5,  0.0,
+        -.5,  0,  0.0,
+        .5, 0,  0.0,
+        0, -.5,  0.0
+    ];
+   
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+    var rhombus = {buffer:vertexBuffer, vertSize:3, nVerts:4, primtype:gl.TRIANGLE_STRIP};// la primitiva que se usa, triangle_strip intenta crear imagen con triangulos, triangles solo deja hacer 1 triangulo
     return rhombus;
+    
 }
 
 function createSphere(gl, radius)
 {
-    var sphere = {};
+
+    var vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    var triangles = 100;
+
+    var drawbableTriangles = triangles - (triangles*.25);
+    verts = [
+        0.0,  0.0,  0.0,
+    ];
+
+    var angle = (1.5 * Math.PI) / triangles;
+    for(var i = 1; i <= triangles; i++) 
+    {
+        var index = i*3
+        verts[index] = Math.cos(angle*i + Math.PI/4)*radius; 
+        verts[index+1] = Math.sin(angle*i + Math.PI/4) *radius; 
+        verts[index+2] = 0; 
+    }
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+    var sphere = {buffer:vertexBuffer, vertSize:3, nVerts:triangles+1, primtype:gl.TRIANGLE_FAN};
     return sphere;
 }        
